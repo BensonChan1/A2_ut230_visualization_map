@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@6.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6.4.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.1.0"></script>
+</head>
+<body>
+  <div id="vis"/>
+  <script>
+    const spec = {
+  "config": {
+    "view": {"continuousWidth": 300, "continuousHeight": 300, "stroke": null},
+    "background": "#141414",
+    "title": {"color": "white", "fontSize": 16}
+  },
+  "layer": [
+    {
+      "mark": {"type": "arc", "innerRadius": 25},
+      "encoding": {
+        "color": {
+          "field": "Sort_Place",
+          "legend": {"labelColor": "white", "titleColor": "white"},
+          "sort": ["Circulation zone", "Navigation", "Service / Consumption"],
+          "title": "Place",
+          "type": "nominal"
+        },
+        "order": {
+          "field": "Sort_Place",
+          "sort": "ascending",
+          "type": "nominal"
+        },
+        "theta": {"field": "count", "stack": true, "type": "quantitative"},
+        "tooltip": [
+          {"field": "Archetype", "type": "nominal"},
+          {"field": "Sort_Place", "title": "Place", "type": "nominal"},
+          {"field": "count", "type": "quantitative"},
+          {
+            "field": "pct",
+            "format": ".1%",
+            "title": "Percent",
+            "type": "quantitative"
+          }
+        ]
+      },
+      "transform": [
+        {"joinaggregate": [{"op": "sum", "field": "count", "as": "total"}]},
+        {"calculate": "datum.count / datum.total", "as": "pct"}
+      ]
+    },
+    {
+      "mark": {
+        "type": "text",
+        "color": "white",
+        "fontWeight": "bold",
+        "radius": 60,
+        "size": 11
+      },
+      "encoding": {
+        "detail": {"field": "Sort_Place", "type": "nominal"},
+        "order": {
+          "field": "Sort_Place",
+          "sort": "ascending",
+          "type": "nominal"
+        },
+        "text": {"field": "pct", "format": ".0%", "type": "quantitative"},
+        "theta": {"field": "count", "stack": true, "type": "quantitative"}
+      },
+      "transform": [
+        {"joinaggregate": [{"op": "sum", "field": "count", "as": "total"}]},
+        {"calculate": "datum.count / datum.total", "as": "pct"},
+        {"filter": "datum.pct >= 0.01"}
+      ]
+    }
+  ],
+  "data": {"name": "data-7622b8036b78bcc26f11f94c0c1f32a8"},
+  "height": 220,
+  "title": "Through-Mover",
+  "width": 220,
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+  "datasets": {
+    "data-7622b8036b78bcc26f11f94c0c1f32a8": [
+      {
+        "Archetype": "Through-Mover",
+        "Sort_Place": "Circulation zone",
+        "count": 62
+      }
+    ]
+  }
+};
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+</body>
+</html>
