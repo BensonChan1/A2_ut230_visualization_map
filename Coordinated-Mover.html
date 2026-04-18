@@ -16,37 +16,31 @@
   },
   "layer": [
     {
-      "mark": {"type": "arc", "innerRadius": 50},
+      "mark": {"type": "arc", "innerRadius": 25},
       "encoding": {
         "color": {
-          "field": "Interaction",
-          "legend": {
-            "labelColor": "white",
-            "title": "Interaction",
-            "titleColor": "white"
-          },
-          "sort": [
-            "spatial",
-            "spatial/social",
-            "spatial/mediated",
-            "spatial/social/mediated",
-            "social",
-            "social/mediated",
-            "mediated"
-          ],
+          "field": "Sort_Place",
+          "legend": {"labelColor": "white", "titleColor": "white"},
+          "sort": ["Circulation zone", "Navigation", "Service / Consumption"],
+          "title": "Place",
           "type": "nominal"
         },
         "order": {
-          "field": "Interaction",
+          "field": "Sort_Place",
           "sort": "ascending",
           "type": "nominal"
         },
         "theta": {"field": "count", "stack": true, "type": "quantitative"},
         "tooltip": [
           {"field": "Archetype", "type": "nominal"},
-          {"field": "Interaction", "type": "nominal"},
+          {"field": "Sort_Place", "title": "Place", "type": "nominal"},
           {"field": "count", "type": "quantitative"},
-          {"field": "pct", "format": ".1%", "type": "quantitative"}
+          {
+            "field": "pct",
+            "format": ".1%",
+            "title": "Percent",
+            "type": "quantitative"
+          }
         ]
       },
       "transform": [
@@ -59,13 +53,13 @@
         "type": "text",
         "color": "white",
         "fontWeight": "bold",
-        "radius": 78,
-        "size": 12
+        "radius": 60,
+        "size": 11
       },
       "encoding": {
-        "detail": {"field": "Interaction", "type": "nominal"},
+        "detail": {"field": "Sort_Place", "type": "nominal"},
         "order": {
-          "field": "Interaction",
+          "field": "Sort_Place",
           "sort": "ascending",
           "type": "nominal"
         },
@@ -75,27 +69,31 @@
       "transform": [
         {"joinaggregate": [{"op": "sum", "field": "count", "as": "total"}]},
         {"calculate": "datum.count / datum.total", "as": "pct"},
-        {"filter": "datum.pct >= 0.05"}
+        {"filter": "datum.pct >= 0.01"}
       ]
     }
   ],
-  "data": {"name": "data-2467bc227845ef61402adf1cbe28bbe3"},
-  "height": 260,
+  "data": {"name": "data-9c9c5242db308824227871d160070ab1"},
+  "height": 220,
   "title": "Coordinated-Mover",
-  "width": 260,
+  "width": 220,
   "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
   "datasets": {
-    "data-2467bc227845ef61402adf1cbe28bbe3": [
-      {"Archetype": "Coordinated-Mover", "Interaction": "social", "count": 4},
+    "data-9c9c5242db308824227871d160070ab1": [
       {
         "Archetype": "Coordinated-Mover",
-        "Interaction": "spatial/social",
-        "count": 6
+        "Sort_Place": "Circulation zone",
+        "count": 9
       },
       {
         "Archetype": "Coordinated-Mover",
-        "Interaction": "spatial/social/mediated",
+        "Sort_Place": "Navigation",
         "count": 2
+      },
+      {
+        "Archetype": "Coordinated-Mover",
+        "Sort_Place": "Service / Consumption",
+        "count": 1
       }
     ]
   }
