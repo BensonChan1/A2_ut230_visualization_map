@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@6.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6.4.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.1.0"></script>
+</head>
+<body>
+  <div id="vis"/>
+  <script>
+    const spec = {
+  "config": {
+    "view": {"continuousWidth": 300, "continuousHeight": 300, "stroke": null},
+    "background": "#141414",
+    "title": {"color": "white", "fontSize": 18}
+  },
+  "layer": [
+    {
+      "mark": {"type": "arc"},
+      "encoding": {
+        "color": {
+          "field": "Group_Type",
+          "legend": {
+            "labelColor": "white",
+            "title": "Group Type",
+            "titleColor": "white"
+          },
+          "scale": {
+            "domain": ["pair", "family", "group"],
+            "range": ["#7AFFBD", "#FFD84D", "#F67009"]
+          },
+          "sort": ["pair", "family", "group"],
+          "type": "nominal"
+        },
+        "order": {
+          "field": "Group_Type",
+          "sort": "ascending",
+          "type": "nominal"
+        },
+        "theta": {"field": "count", "stack": true, "type": "quantitative"},
+        "tooltip": [
+          {"field": "Group_Type", "title": "Group Type", "type": "nominal"},
+          {"field": "count", "title": "Count", "type": "quantitative"},
+          {
+            "field": "pct",
+            "format": ".1%",
+            "title": "Percent",
+            "type": "quantitative"
+          }
+        ]
+      },
+      "transform": [
+        {"joinaggregate": [{"op": "sum", "field": "count", "as": "total"}]},
+        {"calculate": "datum.count / datum.total", "as": "pct"}
+      ]
+    },
+    {
+      "mark": {
+        "type": "text",
+        "color": "black",
+        "fontWeight": "bold",
+        "radius": 60,
+        "size": 13
+      },
+      "encoding": {
+        "detail": {"field": "Group_Type", "type": "nominal"},
+        "order": {
+          "field": "Group_Type",
+          "sort": "ascending",
+          "type": "nominal"
+        },
+        "text": {"field": "pct", "format": ".0%", "type": "quantitative"},
+        "theta": {"field": "count", "stack": true, "type": "quantitative"}
+      },
+      "transform": [
+        {"joinaggregate": [{"op": "sum", "field": "count", "as": "total"}]},
+        {"calculate": "datum.count / datum.total", "as": "pct"},
+        {"filter": "datum.pct >= 0.03"}
+      ]
+    }
+  ],
+  "data": {"name": "data-c354af4399f80ee9cf98f7d99623159d"},
+  "height": 300,
+  "title": "Coordinated-Mover: Group Type Distribution",
+  "width": 400,
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+  "datasets": {
+    "data-c354af4399f80ee9cf98f7d99623159d": [
+      {"Group_Type": "group", "count": 1},
+      {"Group_Type": "pair", "count": 10}
+    ]
+  }
+};
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+</body>
+</html>
