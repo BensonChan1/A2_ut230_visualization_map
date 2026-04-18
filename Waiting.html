@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@6.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6.4.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.1.0"></script>
+</head>
+<body>
+  <div id="vis"/>
+  <script>
+    const spec = {
+  "config": {
+    "view": {"continuousWidth": 300, "continuousHeight": 300, "stroke": null},
+    "background": "#141414",
+    "title": {"color": "white", "fontSize": 16}
+  },
+  "layer": [
+    {
+      "mark": {"type": "arc", "innerRadius": 50},
+      "encoding": {
+        "color": {
+          "field": "Interaction",
+          "legend": {
+            "labelColor": "white",
+            "title": "Interaction",
+            "titleColor": "white"
+          },
+          "sort": [
+            "spatial",
+            "spatial/social",
+            "spatial/mediated",
+            "spatial/social/mediated",
+            "social",
+            "social/mediated",
+            "mediated"
+          ],
+          "type": "nominal"
+        },
+        "order": {
+          "field": "Interaction",
+          "sort": "ascending",
+          "type": "nominal"
+        },
+        "theta": {"field": "count", "stack": true, "type": "quantitative"},
+        "tooltip": [
+          {"field": "Archetype", "type": "nominal"},
+          {"field": "Interaction", "type": "nominal"},
+          {"field": "count", "type": "quantitative"},
+          {"field": "pct", "format": ".1%", "type": "quantitative"}
+        ]
+      },
+      "transform": [
+        {"joinaggregate": [{"op": "sum", "field": "count", "as": "total"}]},
+        {"calculate": "datum.count / datum.total", "as": "pct"}
+      ]
+    },
+    {
+      "mark": {
+        "type": "text",
+        "color": "white",
+        "fontWeight": "bold",
+        "radius": 78,
+        "size": 12
+      },
+      "encoding": {
+        "detail": {"field": "Interaction", "type": "nominal"},
+        "order": {
+          "field": "Interaction",
+          "sort": "ascending",
+          "type": "nominal"
+        },
+        "text": {"field": "pct", "format": ".0%", "type": "quantitative"},
+        "theta": {"field": "count", "stack": true, "type": "quantitative"}
+      },
+      "transform": [
+        {"joinaggregate": [{"op": "sum", "field": "count", "as": "total"}]},
+        {"calculate": "datum.count / datum.total", "as": "pct"},
+        {"filter": "datum.pct >= 0.05"}
+      ]
+    }
+  ],
+  "data": {"name": "data-f824a396dc35037ef26f28f8a2fcc067"},
+  "height": 260,
+  "title": "Waiting",
+  "width": 260,
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+  "datasets": {
+    "data-f824a396dc35037ef26f28f8a2fcc067": [
+      {"Archetype": "Waiting", "Interaction": "social", "count": 2},
+      {"Archetype": "Waiting", "Interaction": "social/mediated", "count": 1},
+      {"Archetype": "Waiting", "Interaction": "spatial/mediated", "count": 1}
+    ]
+  }
+};
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+</body>
+</html>
