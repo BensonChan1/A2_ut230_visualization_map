@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@6.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6.4.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.1.0"></script>
+</head>
+<body>
+  <div id="vis"/>
+  <script>
+    const spec = {
+  "config": {
+    "view": {"continuousWidth": 300, "continuousHeight": 300, "stroke": null},
+    "background": "#141414",
+    "title": {"color": "white", "fontSize": 18, "offset": 20}
+  },
+  "layer": [
+    {
+      "mark": {"type": "arc"},
+      "encoding": {
+        "color": {
+          "field": "Attention",
+          "legend": {"labelColor": "white", "titleColor": "white"},
+          "sort": [
+            "walking",
+            "looking at signage",
+            "phone use",
+            "Talking with another person",
+            "Talking while standing",
+            "looking at environment",
+            "Talking",
+            "phone use + Talking with another person",
+            "play with the suitcase"
+          ],
+          "title": "Attention",
+          "type": "nominal"
+        },
+        "order": {"field": "Attention", "sort": "ascending", "type": "nominal"},
+        "theta": {"field": "count", "stack": true, "type": "quantitative"},
+        "tooltip": [
+          {"field": "Attention", "title": "Attention", "type": "nominal"},
+          {"field": "count", "title": "Count", "type": "quantitative"},
+          {
+            "field": "pct",
+            "format": ".1%",
+            "title": "Percent",
+            "type": "quantitative"
+          }
+        ]
+      },
+      "transform": [
+        {"joinaggregate": [{"op": "sum", "field": "count", "as": "total"}]},
+        {"calculate": "datum.count / datum.total", "as": "pct"}
+      ]
+    },
+    {
+      "mark": {
+        "type": "text",
+        "color": "white",
+        "fontWeight": "bold",
+        "radius": 62,
+        "size": 12
+      },
+      "encoding": {
+        "detail": {"field": "Attention", "type": "nominal"},
+        "order": {"field": "Attention", "sort": "ascending", "type": "nominal"},
+        "text": {"field": "pct", "format": ".0%", "type": "quantitative"},
+        "theta": {"field": "count", "stack": true, "type": "quantitative"}
+      },
+      "transform": [
+        {"joinaggregate": [{"op": "sum", "field": "count", "as": "total"}]},
+        {"calculate": "datum.count / datum.total", "as": "pct"},
+        {"filter": "datum.pct >= 0.03"}
+      ]
+    }
+  ],
+  "data": {"name": "data-2951294135c4a381b53684343168b437"},
+  "height": 320,
+  "title": "Route-Checker: Attention Distribution",
+  "width": 420,
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+  "datasets": {
+    "data-2951294135c4a381b53684343168b437": [
+      {"Attention": "Talking while standing", "count": 2},
+      {"Attention": "looking at signage", "count": 6},
+      {"Attention": "phone use", "count": 2},
+      {"Attention": "walking", "count": 1}
+    ]
+  }
+};
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+</body>
+</html>
