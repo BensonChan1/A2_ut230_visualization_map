@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@6.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6.4.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.1.0"></script>
+</head>
+<body>
+  <div id="vis"/>
+  <script>
+    const spec = {
+  "config": {
+    "view": {"continuousWidth": 300, "continuousHeight": 300, "stroke": null},
+    "background": "#141414",
+    "title": {"color": "white", "fontSize": 20}
+  },
+  "layer": [
+    {
+      "mark": {"type": "arc", "innerRadius": 40},
+      "encoding": {
+        "color": {
+          "field": "Sort_Place",
+          "legend": {
+            "labelColor": "white",
+            "labelFontSize": 14,
+            "titleColor": "white",
+            "titleFontSize": 18
+          },
+          "sort": ["Circulation Zone", "Navigation", "Service / Consumption"],
+          "title": "Place",
+          "type": "nominal"
+        },
+        "order": {
+          "field": "Sort_Place",
+          "sort": "ascending",
+          "type": "nominal"
+        },
+        "theta": {"field": "count", "stack": true, "type": "quantitative"},
+        "tooltip": [
+          {"field": "Archetype", "type": "nominal"},
+          {"field": "Sort_Place", "title": "Place", "type": "nominal"},
+          {"field": "count", "type": "quantitative"},
+          {
+            "field": "pct",
+            "format": ".1%",
+            "title": "Percent",
+            "type": "quantitative"
+          }
+        ]
+      },
+      "transform": [
+        {"joinaggregate": [{"op": "sum", "field": "count", "as": "total"}]},
+        {"calculate": "datum.count / datum.total", "as": "pct"}
+      ]
+    },
+    {
+      "mark": {
+        "type": "text",
+        "color": "black",
+        "fontWeight": "bold",
+        "radius": 60,
+        "size": 13
+      },
+      "encoding": {
+        "detail": {"field": "Sort_Place", "type": "nominal"},
+        "order": {
+          "field": "Sort_Place",
+          "sort": "ascending",
+          "type": "nominal"
+        },
+        "text": {"field": "pct", "format": ".0%", "type": "quantitative"},
+        "theta": {"field": "count", "stack": true, "type": "quantitative"}
+      },
+      "transform": [
+        {"joinaggregate": [{"op": "sum", "field": "count", "as": "total"}]},
+        {"calculate": "datum.count / datum.total", "as": "pct"},
+        {"filter": "datum.pct >= 0.01"}
+      ]
+    }
+  ],
+  "data": {"name": "data-a596b0373a41965280e8a92941492f8a"},
+  "height": 220,
+  "title": "Consumption",
+  "width": 220,
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+  "datasets": {
+    "data-a596b0373a41965280e8a92941492f8a": [
+      {
+        "Archetype": "Consumption",
+        "Sort_Place": "Circulation Zone",
+        "count": 2
+      },
+      {
+        "Archetype": "Consumption",
+        "Sort_Place": "Service / Consumption",
+        "count": 9
+      }
+    ]
+  }
+};
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+</body>
+</html>
